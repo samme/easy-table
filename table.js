@@ -1,10 +1,3 @@
-var ansiRegex = require('ansi-regex')
-var wcwidth
-
-try {
-  wcwidth = require('wcwidth')
-} catch (e) {}
-
 module.exports = Table
 
 function Table () {
@@ -50,8 +43,7 @@ function string (val) {
 }
 
 function length (str) {
-  var s = str.replace(ansiRegex(), '')
-  return wcwidth == null ? s.length : wcwidth(s)
+  return str.length
 }
 
 /**

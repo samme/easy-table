@@ -28,10 +28,6 @@
   "scripts": {
     "test": "mocha -R dot --check-leaks"
   },
-  "optionalDependencies": {
-    "wcwidth": ">=1.0.1"
-  },
-  "dependencies": {
-    "ansi-regex": "^3.0.0"
-  }
+  "optionalDependencies": {},
+  "dependencies": {}
 }
