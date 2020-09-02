@@ -3,13 +3,13 @@ var wcwidth
 
 try {
   wcwidth = require('wcwidth')
-} catch(e) {}
+} catch (e) {}
 
 module.exports = Table
 
-function Table() {
+function Table () {
   this.rows = []
-  this.row = {__printers : {}}
+  this.row = { __printers: {} }
 }
 
 /**
@@ -18,9 +18,9 @@ function Table() {
  * @returns {Table} `this`
  */
 
-Table.prototype.newRow = function() {
+Table.prototype.newRow = function () {
   this.rows.push(this.row)
-  this.row = {__printers : {}}
+  this.row = { __printers: {} }
   return this
 }
 
@@ -33,7 +33,7 @@ Table.prototype.newRow = function() {
  * @returns {Table} `this`
  */
 
-Table.prototype.cell = function(col, val, printer) {
+Table.prototype.cell = function (col, val, printer) {
   this.row[col] = val
   this.row.__printers[col] = printer || string
   return this
@@ -45,11 +45,11 @@ Table.prototype.cell = function(col, val, printer) {
 
 Table.prototype.separator = '  '
 
-function string(val) {
-  return val === undefined ? '' : ''+val
+function string (val) {
+  return val === undefined ? '' : '' + val
 }
 
-function length(str) {
+function length (str) {
   var s = str.replace(ansiRegex(), '')
   return wcwidth == null ? s.length : wcwidth(s)
 }
@@ -69,8 +69,8 @@ Table.string = string
 
 Table.leftPadder = leftPadder
 
-function leftPadder(ch) {
-  return function(val, width) {
+function leftPadder (ch) {
+  return function (val, width) {
     var str = string(val)
     var len = length(str)
     var pad = width > len ? Array(width - len + 1).join(ch) : ''
@@ -93,8 +93,8 @@ var padLeft = Table.padLeft = leftPadder(' ')
 
 Table.rightPadder = rightPadder
 
-function rightPadder(ch) {
-  return function padRight(val, width) {
+function rightPadder (ch) {
+  return function padRight (val, width) {
     var str = string(val)
     var len = length(str)
     var pad = width > len ? Array(width - len + 1).join(ch) : ''
@@ -113,18 +113,17 @@ var padRight = rightPadder(' ')
  * @returns {Function}
  */
 
-Table.number = function(digits) {
-  return function(val, width) {
+Table.number = function (digits) {
+  return function (val, width) {
     if (val == null) return ''
-    if (typeof val != 'number')
-      throw new Error(''+val + ' is not a number')
-    var str = digits == null ? val+'' : val.toFixed(digits)
+    if (typeof val !== 'number') { throw new Error('' + val + ' is not a number') }
+    var str = digits == null ? val + '' : val.toFixed(digits)
     return padLeft(str, width)
   }
 }
 
-function each(row, fn) {
-  for(var key in row) {
+function each (row, fn) {
+  for (var key in row) {
     if (key == '__printers') continue
     fn(key, row[key])
   }
@@ -136,19 +135,19 @@ function each(row, fn) {
  * @returns {string[]}
  */
 
-Table.prototype.columns = function() {
+Table.prototype.columns = function () {
   var cols = {}
-  for(var i = 0; i < 2; i++) { // do 2 times
-    this.rows.forEach(function(row) {
+  for (var i = 0; i < 2; i++) { // do 2 times
+    this.rows.forEach(function (row) {
       var idx = 0
-      each(row, function(key) {
+      each(row, function (key) {
         idx = Math.max(idx, cols[key] || 0)
         cols[key] = idx
         idx++
       })
     })
   }
-  return Object.keys(cols).sort(function(a, b) {
+  return Object.keys(cols).sort(function (a, b) {
     return cols[a] - cols[b]
   })
 }
@@ -159,27 +158,27 @@ Table.prototype.columns = function() {
  * @returns {String} String representaion of the table
  */
 
-Table.prototype.print = function() {
+Table.prototype.print = function () {
   var cols = this.columns()
   var separator = this.separator
   var widths = {}
   var out = ''
 
   // Calc widths
-  this.rows.forEach(function(row) {
-    each(row, function(key, val) {
+  this.rows.forEach(function (row) {
+    each(row, function (key, val) {
       var str = row.__printers[key].call(row, val)
       widths[key] = Math.max(length(str), widths[key] || 0)
     })
   })
 
   // Now print
-  this.rows.forEach(function(row) {
+  this.rows.forEach(function (row) {
     var line = ''
-    cols.forEach(function(key) {
+    cols.forEach(function (key) {
       var width = widths[key]
       var str = row.hasOwnProperty(key)
-        ? ''+row.__printers[key].call(row, row[key], width)
+        ? '' + row.__printers[key].call(row, row[key], width)
         : ''
       line += padRight(str, width) + separator
     })
@@ -196,7 +195,7 @@ Table.prototype.print = function() {
  * @returns {String}
  */
 
-Table.prototype.toString = function() {
+Table.prototype.toString = function () {
   var cols = this.columns()
   var out = new Table()
 
@@ -204,7 +203,7 @@ Table.prototype.toString = function() {
   out.separator = this.separator
 
   // Write header
-  cols.forEach(function(col) {
+  cols.forEach(function (col) {
     out.cell(col, col)
   })
   out.newRow()
@@ -230,9 +229,9 @@ Table.prototype.toString = function() {
  * @returns {Table} `this`
  */
 
-Table.prototype.pushDelimeter = function(cols) {
+Table.prototype.pushDelimeter = function (cols) {
   cols = cols || this.columns()
-  cols.forEach(function(col) {
+  cols.forEach(function (col) {
     this.cell(col, undefined, leftPadder('-'))
   }, this)
   return this.newRow()
@@ -244,12 +243,12 @@ Table.prototype.pushDelimeter = function(cols) {
  * @param {Function} cb - Callback function with signature `(column, value, printer)`
  */
 
-Table.prototype.forEachTotal = function(cb) {
-  for(var key in this.totals) {
+Table.prototype.forEachTotal = function (cb) {
+  for (var key in this.totals) {
     var aggr = this.totals[key]
     var acc = aggr.init
     var len = this.rows.length
-    this.rows.forEach(function(row, idx) {
+    this.rows.forEach(function (row, idx) {
       acc = aggr.reduce.call(row, acc, row[key], idx, len)
     })
     cb(key, acc, aggr.printer)
@@ -265,14 +264,14 @@ Table.prototype.forEachTotal = function(cb) {
  * @returns {String}
  */
 
-Table.prototype.printTransposed = function(opts) {
+Table.prototype.printTransposed = function (opts) {
   opts = opts || {}
-  var out = new Table
+  var out = new Table()
   out.separator = opts.separator || this.separator
-  this.columns().forEach(function(col) {
+  this.columns().forEach(function (col) {
     out.cell(0, col, opts.namePrinter)
-    this.rows.forEach(function(row, idx) {
-      out.cell(idx+1, row[col], row.__printers[col])
+    this.rows.forEach(function (row, idx) {
+      out.cell(idx + 1, row[col], row.__printers[col])
     })
     out.newRow()
   }, this)
@@ -286,15 +285,15 @@ Table.prototype.printTransposed = function(opts) {
  * @returns {Table} `this`
  */
 
-Table.prototype.sort = function(cmp) {
-  if (typeof cmp == 'function') {
+Table.prototype.sort = function (cmp) {
+  if (typeof cmp === 'function') {
     this.rows.sort(cmp)
     return this
   }
 
   var keys = Array.isArray(cmp) ? cmp : this.columns()
 
-  var comparators = keys.map(function(key) {
+  var comparators = keys.map(function (key) {
     var order = 'asc'
     var m = /(.*)\|\s*(asc|des)\s*$/.exec(key)
     if (m) {
@@ -308,7 +307,7 @@ Table.prototype.sort = function(cmp) {
     }
   })
 
-  return this.sort(function(a, b) {
+  return this.sort(function (a, b) {
     for (var i = 0; i < comparators.length; i++) {
       var order = comparators[i](a, b)
       if (order != 0) return order
@@ -317,7 +316,7 @@ Table.prototype.sort = function(cmp) {
   })
 }
 
-function compare(a, b) {
+function compare (a, b) {
   if (a === b) return 0
   if (a === undefined) return 1
   if (b === undefined) return -1
@@ -339,7 +338,7 @@ function compare(a, b) {
  * @returns {Table} `this`
  */
 
-Table.prototype.total = function(col, opts) {
+Table.prototype.total = function (col, opts) {
   opts = opts || {}
   this.totals = this.totals || {}
   this.totals[col] = {
@@ -365,9 +364,9 @@ Table.aggr = {}
  * @returns {printer}
  */
 
-Table.aggr.printer = function(prefix, printer) {
+Table.aggr.printer = function (prefix, printer) {
   printer = printer || string
-  return function(val, width) {
+  return function (val, width) {
     return padLeft(prefix + printer(val), width)
   }
 }
@@ -376,7 +375,7 @@ Table.aggr.printer = function(prefix, printer) {
  * Sum reduction
  */
 
-Table.aggr.sum = function(acc, val) {
+Table.aggr.sum = function (acc, val) {
   return acc + val
 }
 
@@ -384,9 +383,9 @@ Table.aggr.sum = function(acc, val) {
  * Average reduction
  */
 
-Table.aggr.avg = function(acc, val, idx, len) {
+Table.aggr.avg = function (acc, val, idx, len) {
   acc = acc + val
-  return idx + 1 == len ? acc/len : acc
+  return idx + 1 == len ? acc / len : acc
 }
 
 /**
@@ -398,30 +397,30 @@ Table.aggr.avg = function(acc, val, idx, len) {
  * @returns {String}
  */
 
-Table.print = function(obj, format, cb) {
+Table.print = function (obj, format, cb) {
   var opts = format || {}
 
-  format = typeof format == 'function'
+  format = typeof format === 'function'
     ? format
-    : function(obj, cell) {
-      for(var key in obj) {
+    : function (obj, cell) {
+      for (var key in obj) {
         if (!obj.hasOwnProperty(key)) continue
         var params = opts[key] || {}
         cell(params.name || key, obj[key], params.printer)
       }
     }
 
-  var t = new Table
+  var t = new Table()
   var cell = t.cell.bind(t)
 
   if (Array.isArray(obj)) {
-    cb = cb || function(t) { return t.toString() }
-    obj.forEach(function(item) {
+    cb = cb || function (t) { return t.toString() }
+    obj.forEach(function (item) {
       format(item, cell)
       t.newRow()
     })
   } else {
-    cb = cb || function(t) { return t.printTransposed({separator: ' : '}) }
+    cb = cb || function (t) { return t.printTransposed({ separator: ' : ' }) }
     format(obj, cell)
     t.newRow()
   }
@@ -433,7 +432,7 @@ Table.print = function(obj, format, cb) {
  * Same as `Table.print()` but yields the result to `console.log()`
  */
 
-Table.log = function(obj, format, cb) {
+Table.log = function (obj, format, cb) {
   console.log(Table.print(obj, format, cb))
 }
 
@@ -441,6 +440,6 @@ Table.log = function(obj, format, cb) {
  * Same as `.toString()` but yields the result to `console.log()`
  */
 
-Table.prototype.log = function() {
+Table.prototype.log = function () {
   console.log(this.toString())
 }
