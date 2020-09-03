@@ -78,22 +78,6 @@ describe('Easy table', function () {
     )
   })
 
-  it('Table.print(array) with color data', function () {
-    var arr = [
-      { foo: 'foooo', bar: '[95m1[39m' }
-    ]
-    Table.print(arr, {
-      bar: {
-        name: 'baz',
-        printer: Table.padLeft
-      }
-    }).should.equal(
-      'foo  ' + '  ' + 'baz\n' +
-      '-----' + '  ' + '---\n' +
-      'foooo' + '  ' + '  [95m1[39m\n'
-    )
-  })
-
   it('Table.print(obj)', function () {
     var obj = {
       foo: 'foo',
