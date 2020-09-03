@@ -1,19 +1,19 @@
 var should = require('should')
 var Table = require('..')
 
-describe('Easy table', function() {
+describe('Easy table', function () {
   var t
 
-  beforeEach(function() {
-    t = new Table
+  beforeEach(function () {
+    t = new Table()
   })
 
-  function expectLine(line) {
+  function expectLine (line) {
     line--
     return t.toString().split('\n')[line].should
   }
 
-  it('Formating', function() {
+  it('Formating', function () {
     t.cell('First column', '11')
     t.cell('Second column', '12')
     t.newRow()
@@ -35,36 +35,36 @@ describe('Easy table', function() {
     )
   })
 
-  it('Printing transposed version', function() {
+  it('Printing transposed version', function () {
     t.cell('c1', 11).cell('c2', 12).newRow()
     t.cell('c1', 21).cell('c2', 22).newRow()
-    t.printTransposed({separator: ':'}).should.equal(
+    t.printTransposed({ separator: ':' }).should.equal(
       'c1:11:21\n' +
       'c2:12:22\n'
     )
   })
 
-  it('Columns ordering', function() {
+  it('Columns ordering', function () {
     t.cell('1').cell('3').cell('5').newRow()
     t.cell('1').cell('4').cell('5').newRow()
     t.cell('2').cell('4').newRow()
     t.columns().should.eql(['1', '2', '3', '4', '5'])
 
-    t = new Table
+    t = new Table()
     t.cell('1').cell('3').cell('5').newRow()
     t.cell('2').cell('4').newRow()
     t.cell('1').cell('4').cell('5').newRow()
     t.columns().should.eql(['1', '2', '3', '4', '5'])
 
-    t = new Table
+    t = new Table()
     t.cell('3').newRow()
     t.cell('3').cell('4').cell('5').newRow()
     t.cell('1').cell('2').cell('3').newRow()
     t.columns().should.eql(['1', '2', '3', '4', '5'])
   })
 
-  it('Table.print(array)', function() {
-    var arr = [{foo: 'foooo', bar: 1 }]
+  it('Table.print(array)', function () {
+    var arr = [{ foo: 'foooo', bar: 1 }]
     Table.print(arr, {
       bar: {
         name: 'baz',
@@ -77,9 +77,9 @@ describe('Easy table', function() {
     )
   })
 
-  it('Table.print(array) with color data', function() {
+  it('Table.print(array) with color data', function () {
     var arr = [
-      {foo: 'foooo', bar: '[95m1[39m'}
+      { foo: 'foooo', bar: '[95m1[39m' }
     ]
     Table.print(arr, {
       bar: {
@@ -93,7 +93,7 @@ describe('Easy table', function() {
     )
   })
 
-  it('Table.print(obj)', function() {
+  it('Table.print(obj)', function () {
     var obj = {
       foo: 'foo',
       bar: 1
@@ -105,9 +105,9 @@ describe('Easy table', function() {
   })
 
   describe('Should accept print function as third parameter to .cell() method and call it two times', function () {
-    it('First time to determine minimal width', function() {
+    it('First time to determine minimal width', function () {
       var callCount = 0
-      function print(obj) {
+      function print (obj) {
         obj.should.equal(10)
         if (callCount == 0) arguments.length.should.equal(1)
         callCount++
@@ -117,9 +117,9 @@ describe('Easy table', function() {
       callCount.should.be.equal(2)
     })
 
-    it('Second time asking to render actual value passing additional length parameter', function() {
+    it('Second time asking to render actual value passing additional length parameter', function () {
       var callCount = 0
-      function print(obj, length) {
+      function print (obj, length) {
         obj.should.equal(10)
         if (callCount == 1) length.should.equal(3)
         callCount++
@@ -131,8 +131,8 @@ describe('Easy table', function() {
       expectLine(3).be.equal(' 10')
     })
 
-    it('It should be called with `this` set to row', function() {
-      function print(obj) {
+    it('It should be called with `this` set to row', function () {
+      function print (obj) {
         this.should.have.property('bar')
         this.should.have.property('baz')
         return obj.toString()
@@ -141,11 +141,11 @@ describe('Easy table', function() {
     })
   })
 
-  it('Table.padLeft()', function() {
+  it('Table.padLeft()', function () {
     Table.padLeft('a', 2).should.equal(' a')
   })
 
-  it('Sorting', function() {
+  it('Sorting', function () {
     t.cell('a', 1).newRow()
     t.cell('a', 2).newRow()
     t.cell('a', null).newRow()
@@ -165,15 +165,15 @@ describe('Easy table', function() {
     expectLine(4).be.equal('2   ')
   })
 
-  describe('Totals', function() {
-    it('Default totaling', function() {
+  describe('Totals', function () {
+    it('Default totaling', function () {
       t.cell('a', 1).newRow()
       t.cell('a', 2).newRow()
       t.total('a')
       expectLine(6).be.equal('3')
     })
 
-    it('Custom', function() {
+    it('Custom', function () {
       t.cell('just column', 1).newRow()
       t.cell('just column', 2).newRow()
       t.total('just column', {
@@ -185,4 +185,3 @@ describe('Easy table', function() {
     })
   })
 })
-
