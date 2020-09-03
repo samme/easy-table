@@ -4,9 +4,7 @@ env:
   es6: false
 extends:
   - standard
-globals:
-  Atomics: readonly
-  SharedArrayBuffer: readonly
+globals: {}
 parserOptions:
   ecmaVersion: 2018
 rules:

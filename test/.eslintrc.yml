@@ -6,8 +6,7 @@ env:
 extends:
   - standard
 globals:
-  Atomics: readonly
-  SharedArrayBuffer: readonly
+  should: readonly
 parserOptions:
   ecmaVersion: 2018
 rules:
