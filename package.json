@@ -34,7 +34,8 @@
   "scripts": {
     "test": "mocha -R dot --check-leaks",
     "build": "rollup -c",
-    "dev": "rollup -c -w"
+    "dev": "rollup -c -w",
+    "preversion": "npm run build && node -c table.umd.js && git add table.umd.js"
   },
   "optionalDependencies": {},
   "dependencies": {},
