@@ -1,4 +1,12 @@
 
+2.0.0 / 2020-09-04
+==================
+
+npm release (@samme/easy-table)
+
+  * Removed: all the terminal stuff
+  * Added: UMD build, `table.umd.js`
+
 1.1.1 / 2018-01-08
 ==================
 
