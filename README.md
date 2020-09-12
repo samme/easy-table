@@ -1,8 +1,6 @@
 # Easy table
 
-Nice utility for rendering text tables with javascript.
-
-A fork of [eldargab/easy-table](https://github.com/eldargab/easy-table), for the browser.
+Nice utility for rendering text tables in the browser, from [eldargab/easy-table](https://github.com/eldargab/easy-table).
 
 ## Usage
 
